@@ -50,7 +50,7 @@ header h1{font-size:20px;letter-spacing:.06em}header .head-actions{display:flex;
 <div class="setting-main"><label for="min">MINIMUM SEATS</label><input id="min" type="number" min="0" value="2"></div>
 <div class="setting-secondary"><label for="minmode">MINIMUM BASIS</label><select id="minmode"><option value="teacher">Per participating teacher</option><option value="district">Per participating district</option></select></div>
 <div class="setting-secondary"><label for="popmode">POPULATION WEIGHTING</label><select id="popmode"><option value="elementary">Elementary</option><option value="junior">Junior High</option><option value="senior">Senior High</option><option value="k12">K–12</option></select></div></div>
-<div class="actions"><label class="filebtn">IMPORT DACAPO CSV<input id="csv" type="file" accept=".csv,text/csv"></label><button id="calculate">RECALCULATE</button><button id="export">EXPORT CSV</button><button id="save">SAVE WORKING FILE</button><label class="filebtn">OPEN SAVED FILE<input type="file" id="open" accept=".json,application/json"></label><button id="reset">RESET EXAMPLE</button></div>
+<div class="actions"><label class="filebtn">IMPORT DACAPO CSV<input id="csv" type="file" accept=".csv,text/csv"></label><button id="calculate">RECALCULATE</button><button id="export">EXPORT CSV</button><button id="exportPdf" type="button">EXPORT PDF</button><button id="save">SAVE WORKING FILE</button><label class="filebtn">OPEN SAVED FILE<input type="file" id="open" accept=".json,application/json"></label><button id="reset">RESET EXAMPLE</button></div>
 <div class="note">Changes recalculate automatically after you finish editing a cell. Use RECALCULATE to run the calculation again manually. Data stay in your browser unless exported or saved.</div>
 </section>
 <dialog id="popdialog" class="district-dialog" aria-labelledby="popTitle"><div class="dialog-top"><h2 id="popTitle">DISTRICT POPULATIONS</h2><button type="button" class="icon-button" id="closePop" aria-label="Close district settings">✕</button></div>
@@ -124,10 +124,69 @@ function parseCSV(text){const out=[];let row=[],field='',quoted=false;for(let i=
 function importCsv(text){const rows=parseCSV(text.replace(/^\ufeff/,''));if(!rows.length)throw Error('CSV is empty');const headers=rows.shift().map(x=>x.trim());const idx=h=>headers.indexOf(h);for(const h of ['Teacher','District','Nominated Part 1','Nominated Part 2','Nominated Either'])if(idx(h)<0)throw Error('Missing DaCapo column: '+h);
  const map=keyMap(), counts=new Map(districts.map(d=>[d.name,new Map()])),unknown=new Set();let tally=0;
  for(const r of rows){const dn=r[idx('District')]||'', d=map.get(norm(dn));if(!d){unknown.add(dn);continue}const teacher=(r[idx('Teacher')]||'').trim();if(!teacher)continue;const n=['Nominated Part 1','Nominated Part 2','Nominated Either'].reduce((a,h)=>a+Math.max(0,Math.floor(+r[idx(h)]||0)),0);const dm=counts.get(d.name);const t=teacher.toLowerCase();dm.set(t,(dm.get(t)||0)+n);tally+=n}
- for(const d of districts){const t=[...counts.get(d.name).values()].filter(n=>n>0);d.teacherNoms=t;d.teachers=t.length;d.noms=t.reduce((a,b)=>a+b,0)}teacherEvidence=true;lastResult=null;dirtyNow();render();renderPopulations();$('unmatched').textContent=unknown.size?`Unmatched districts (not counted): ${[...unknown].join('; ')}`:'';warn(unknown.size?'Review unmatched district names before using these results.':`Imported ${fmt(tally)} nominations across ${fmt(districts.filter(d=>d.noms>0).length)} districts. Press Calculate to allocate.` ,unknown.size)}
+ for(const d of districts){const t=[...counts.get(d.name).values()].filter(n=>n>0);d.teacherNoms=t;d.teachers=t.length;d.noms=t.reduce((a,b)=>a+b,0)}
+ // Retain aggregate voice-part nomination counts for the compact PDF report.
+ const partTotals=new Map(districts.map(d=>[d.name,{part1:0,part2:0,either:0}]));
+ for(const row of rows){const d=map.get(norm(row[idx('District')]||''));if(!d)continue;
+   const sum=partTotals.get(d.name);for(const [field,h] of [['part1','Nominated Part 1'],['part2','Nominated Part 2'],['either','Nominated Either']])sum[field]+=Math.max(0,Math.floor(+row[idx(h)]||0));
+ }
+ for(const d of districts)d.parts=partTotals.get(d.name);teacherEvidence=true;lastResult=null;dirtyNow();render();renderPopulations();$('unmatched').textContent=unknown.size?`Unmatched districts (not counted): ${[...unknown].join('; ')}`:'';warn(unknown.size?'Review unmatched district names before using these results.':`Imported ${fmt(tally)} nominations across ${fmt(districts.filter(d=>d.noms>0).length)} districts. Press Calculate to allocate.` ,unknown.size)}
 function download(text,name,type){const a=document.createElement('a'),url=URL.createObjectURL(new Blob([text],{type}));a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
 function csvEscape(v){const s=String(v??'');return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s}
 function exportCSV(){const basis=$('popmode').value,cols=['District','Ensemble','Population basis','Population','Teachers','Nominated','Minimum','Population allocation','Redistributed','Final accepted','Not accepted'];const lines=[cols];for(const d of districts){const r=lastResult?.find(x=>x.name===d.name);lines.push([d.name,$('ensemble').value,basis,d[basis]??'',d.teachers,d.noms,r?.minimum??'',r?.populationSeats??'',r?.redistributed??'',r?.accepted??'',r?r.noms-r.accepted:''])}download(lines.map(r=>r.map(csvEscape).join(',')).join('\r\n'),'MCSMA-'+$('ensemble').value.trim().replace(/[^a-z0-9-]+/gi,'-')+'-Matrix.csv','text/csv;charset=utf-8')}
+
+function printableReport(){
+ if(!lastResult){alert('Calculate a valid allocation before exporting the PDF.');return;}
+ const basis=$('popmode').value;
+ const active=districts.filter(d=>d.noms>0);
+ const weightedPopulation=active.reduce((a,d)=>a+Math.max(0,+d[basis]||0),0);
+ const results=new Map(lastResult.map(r=>[r.name,r]));
+ const heading=escapeHTML($('ensemble').value.trim()||'Choral Ensemble');
+ const hasEither=districts.some(d=>(+d.parts?.either||0)>0);
+ const partColumns=hasEither?3:2;
+ let body='',teacherTotal=0,totalAccepted=0,totalNominations=0,totalPart1=0,totalPart2=0,totalEither=0,activeDistricts=0;
+ for(const d of districts){
+   const n=Math.max(0,+d.noms||0),teachers=Math.max(0,+d.teachers||0);
+   const r=results.get(d.name),accepted=r?.accepted||0,percent=n&&weightedPopulation?100*Math.max(0,+d[basis]||0)/weightedPopulation:0;
+   const p1=d.parts?.part1,p2=d.parts?.part2,pe=d.parts?.either;
+   teacherTotal+=teachers;totalAccepted+=accepted;totalNominations+=n;
+   totalPart1+=p1||0;totalPart2+=p2||0;totalEither+=pe||0;
+   if(n)activeDistricts++;
+   body+='<tr><td class="district">'+escapeHTML(d.name)+'</td>'+
+     '<td class="yn"><span class="pill '+(n?'yes':'no')+'">'+(n?'Yes':'No')+'</span></td>'+
+     '<td class="teachers">'+(teachers||'—')+'</td>'+
+     '<td class="accept">'+(n?accepted:'')+'</td><td class="accept">'+percent.toFixed(2)+'%</td>'+
+     '<td class="nom">'+n+'</td><td class="nom">'+(p1==null?'—':p1||'—')+'</td><td class="nom">'+(p2==null?'—':p2||'—')+'</td>'+
+     (hasEither?'<td class="nom">'+(pe==null?'—':pe||'—')+'</td>':'')+'</tr>';
+ }
+ const totalPercent=weightedPopulation?'100%':'—';
+ const totals='<tr class="totals"><td>TOTALS</td><td>'+activeDistricts+'</td><td>'+teacherTotal+'</td><td>'+totalAccepted+'</td><td>'+totalPercent+'</td><td>'+totalNominations+'</td><td>'+(totalPart1||'—')+'</td><td>'+(totalPart2||'—')+'</td>'+(hasEither?'<td>'+(totalEither||'—')+'</td>':'')+'</tr>';
+ const report='<!doctype html><html><head><meta charset="utf-8"><title>'+heading+' — MCSMA Acceptance Matrix</title><style>'+
+ '@page{size:letter landscape;margin:0.33in}*{box-sizing:border-box}body{font-family:Arial,Helvetica,sans-serif;margin:0;color:#111}'+
+ '.top{display:grid;grid-template-columns:41% 59%;margin-bottom:9px}.heading{background:#70a84f;text-align:center;font-weight:bold;font-size:19px;padding:5px 8px}'+
+ 'table{width:100%;border-collapse:collapse;table-layout:fixed;font-size:10.5px}th,td{padding:3px 5px;text-align:center;line-height:1.12}thead th{font-weight:bold}'+
+ 'th.district{width:29%;border:0;background:#fff}td.district{text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}'+
+ 'th.yn{width:9%;border:0;background:#fff}th.teachers{width:8%;background:#e9edf0;border:1.5px solid #111}'+
+ 'th.accept,td.accept{background:#b2c9ef;border-left:1px solid #111;border-right:1px solid #111}th.nom,td.nom{background:#ffe5a0;border-left:1px solid #111;border-right:1px solid #111}'+
+ 'thead .group{font-size:12px;padding:4px}thead .group.accept{background:#a9c5ef}thead .group.nom{background:#ffe4a1}'+
+ 'thead tr:last-child th.accept,thead tr:last-child th.nom{border-top:2px solid #111;border-bottom:2px solid #111}'+
+ 'tbody tr td.accept,tbody tr td.nom{border-bottom:1px solid #111}td.teachers{background:#f1f3f5;border-left:1px solid #aaa;border-right:1px solid #aaa}'+
+ '.pill{display:inline-block;color:white;border-radius:12px;width:52px;padding:1px}.yes{background:#087b55}.no{background:#be0010}'+
+ 'tfoot td{background:#111!important;color:#fff;font-weight:bold;border:2px solid #111;font-size:11px}tfoot td:first-child{text-align:right}'+
+ '.foot{font-size:8.5px;margin-top:6px;color:#555}.printbar{padding:8px;margin-bottom:12px;background:#f0f2f5;font-size:12px}'+
+ '@media print{.printbar{display:none}body{-webkit-print-color-adjust:exact;print-color-adjust:exact}}'+
+ '</style></head><body><div class="printbar"><button onclick="window.print()">PRINT / SAVE AS PDF</button> &nbsp; Select <b>Save as PDF</b>, and enable <b>Background graphics</b> to retain the colors.</div>'+
+ '<div class="top"><div></div><div class="heading">'+heading+'</div></div><table><thead><tr><th rowspan="2" class="district"></th><th rowspan="2" class="yn">NOMS?</th><th rowspan="2" class="teachers">TEACHERS</th>'+
+ '<th colspan="2" class="group accept">ACCEPTANCES</th><th colspan="'+partColumns+'" class="group nom">NOMINATIONS</th></tr>'+
+ '<tr><th class="accept">TOTAL</th><th class="accept">% OF CTY</th><th class="nom">TOTAL</th><th class="nom">PART 1</th><th class="nom">PART 2</th>'+
+ (hasEither?'<th class="nom">EITHER</th>':'')+'</tr></thead><tbody>'+body+'</tbody><tfoot>'+totals+'</tfoot></table>'+
+ '<div class="foot">MCSMA · '+escapeHTML(basis.toUpperCase())+' POPULATION · CAPACITY '+readInput().capacity+' · MINIMUM '+readInput().min+' PER '+escapeHTML(readInput().mode.toUpperCase())+
+ '. Blank Part 1 / Part 2 fields indicate that voice-part counts have not been imported from DaCapo.</div></body></html>';
+ const w=window.open('','_blank');if(!w){alert('Allow pop-ups for this website to export PDF.');return;}
+ w.document.open();w.document.write(report);w.document.close();w.focus();
+}
+$('exportPdf').onclick=printableReport;
+
 function saveJSON(){download(JSON.stringify({version:1,ensemble:$('ensemble').value,settings:readInput(),districts},null,2),'MCSMA-Choral-Matrix-Working.json','application/json')}
 $('calculate').onclick=calculate;$('export').onclick=exportCSV;$('save').onclick=saveJSON;
 $('reset').onclick=()=>{if(!confirm('Reset all edits to the original Elementary sample?'))return;districts=structuredClone(ORIGINAL);teacherEvidence=true;lastResult=null;$('ensemble').value='Elementary Chorus';$('capacity').value=200;$('min').value=2;$('minmode').value='teacher';$('popmode').value='elementary';warn('');$('unmatched').textContent='';render();renderPopulations();calculate()};
