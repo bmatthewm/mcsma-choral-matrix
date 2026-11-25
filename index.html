@@ -100,25 +100,45 @@ function renderKPIs(){const total=lastResult||districts;const minSum=lastResult?
  $('noms').textContent=fmt(districts.reduce((a,d)=>a+(+d.noms||0),0));$('teacherTotal').textContent=fmt(districts.reduce((a,d)=>a+(+d.teachers||0),0));$('minimumTotal').textContent=minSum===null?'—':fmt(minSum);
  $('accepted').textContent=lastResult?fmt(lastResult.reduce((a,d)=>a+d.accepted,0)):'—';$('unfilled').textContent=lastResult?fmt(Math.max(0,readInput().capacity-lastResult.reduce((a,d)=>a+d.accepted,0))):'—';}
 function warn(msg,error=false){$('alert').style.display=msg?'block':'none';$('alert').className='alert'+(error?' error':'');$('alert').textContent=msg}
-function calculate(){const {capacity,min,basis,mode}=readInput();warn('');ledger=[];const arr=districts.map(d=>{const noms=Math.max(0,Math.floor(+d.noms||0)),teachers=Math.max(0,Math.floor(+d.teachers||0)),pop=Math.max(0,+d[basis]||0);
- const accurate=mode==='teacher'&&Array.isArray(d.teacherNoms)&&d.teacherNoms.length===teachers;
- const minimum=mode==='district'?Math.min(noms,min):accurate?d.teacherNoms.reduce((a,n)=>a+Math.min(min,n),0):Math.min(noms,min*teachers);
- return {name:d.name,noms,pop,minimum,accepted:minimum,populationSeats:0,redistributed:0};});
+function calculate(){
+ const {capacity,min,basis,mode}=readInput();warn('');ledger=[];
+ const arr=districts.map(d=>{
+  const noms=Math.max(0,Math.floor(+d.noms||0)),teachers=Math.max(0,Math.floor(+d.teachers||0)),pop=Math.max(0,+d[basis]||0);
+  const accurate=mode==='teacher'&&Array.isArray(d.teacherNoms)&&d.teacherNoms.length===teachers;
+  const minimum=mode==='district'?Math.min(noms,min):accurate?d.teacherNoms.reduce((a,n)=>a+Math.min(min,Math.max(0,Math.floor(+n||0))),0):Math.min(noms,min*teachers);
+  return {name:d.name,noms,pop,minimum,accepted:minimum,populationSeats:0,redistributed:0,proportionalTarget:0};
+ });
  const floor=arr.reduce((a,d)=>a+d.minimum,0);
- if(floor>capacity){lastResult=null;warn(`Minimum-seat targets total ${fmt(floor)}, exceeding the ${fmt(capacity)}-seat ensemble capacity by ${fmt(floor-capacity)}. Increase capacity or revise the minimum before calculating.`,true);$('status').textContent='BLOCKED — MINIMUMS EXCEED CAPACITY';render();return}
- let available=capacity-floor,round=0;let blocked=false;
- while(available>0){const eligible=arr.filter(d=>d.accepted<d.noms);if(!eligible.length)break;const weights=eligible.reduce((a,d)=>a+d.pop,0);if(!weights){blocked=true;break}
- round++;const candidates=eligible.map(d=>({d,quota:available*d.pop/weights,room:d.noms-d.accepted}));let assigned=0;const adds=new Map();for(const c of candidates){const n=Math.min(c.room,Math.floor(c.quota));adds.set(c.d.name,n);assigned+=n}
- // Allocate fractional residuals once per pass, then redistribute any surplus from demand caps.
- const sorted=[...candidates].sort((a,b)=>(b.quota-Math.floor(b.quota))-(a.quota-Math.floor(a.quota))||b.d.pop-a.d.pop||a.d.name.localeCompare(b.d.name));
- for(const c of sorted){if(assigned>=available)break;if(adds.get(c.d.name)<c.room){adds.set(c.d.name,adds.get(c.d.name)+1);assigned++}}
- if(!assigned)break;
- for(const c of candidates){const n=adds.get(c.d.name)||0;if(!n)continue;c.d.accepted+=n;if(round===1)c.d.populationSeats+=n;else c.d.redistributed+=n;ledger.push(`Round ${round}: ${c.d.name}: +${n} (total ${c.d.accepted})`)}available-=assigned;
- if(round>1000)throw new Error('Unexpected allocation iteration limit')}
- lastResult=arr;dirty=false;render();$('status').textContent=`Calculated · ${round} distribution pass${round===1?'':'es'}`;$('status').style.color='#087c80';$('ledger').textContent=`Minimum stage: ${fmt(floor)} of ${fmt(capacity)} seats\n${ledger.join('\n')||'No additional seats allocated.'}\n\nRemaining: ${fmt(available)} seats`;
- if(blocked)warn('Some available seats cannot be distributed: remaining requesting districts have no population figure for the selected basis. Fill in or correct those population inputs.',true);
+ if(floor>capacity){lastResult=null;warn('Minimum-seat targets total '+fmt(floor)+', exceeding the '+fmt(capacity)+'-seat ensemble capacity by '+fmt(floor-capacity)+'. Minimum seats have NOT been reduced; increase capacity or revise the minimum setting.',true);$('status').textContent='BLOCKED — MINIMUMS EXCEED CAPACITY';render();return;}
+ const active=arr.filter(d=>d.noms>0),totalPop=active.reduce((a,d)=>a+d.pop,0);
+ const wanted=Math.min(capacity,arr.reduce((a,d)=>a+d.noms,0));
+ // The minimum is a guaranteed floor on FINAL seats, not extra seats on top of population weighting.
+ const target=(scale,d)=>Math.min(d.noms,Math.max(d.minimum,scale*d.pop));
+ let low=0,high=1;
+ if(totalPop>0){
+  while(active.reduce((sum,d)=>sum+target(high,d),0)<wanted-1e-8&&high<1e12)high*=2;
+  for(let i=0;i<90;i++){const mid=(low+high)/2;if(active.reduce((sum,d)=>sum+target(mid,d),0)<wanted)low=mid;else high=mid;}
+ }
+ const canFill=totalPop>0,desired=canFill?wanted:floor;
+ for(const d of arr){
+  d.proportionalTarget=canFill?target(high,d):d.minimum;
+  d.accepted=Math.max(d.minimum,Math.min(d.noms,Math.floor(d.proportionalTarget+1e-9)));
+ }
+ let left=desired-arr.reduce((a,d)=>a+d.accepted,0);
+ const ordered=arr.filter(d=>d.pop>0&&d.accepted<d.noms).sort((a,b)=>(b.proportionalTarget-b.accepted)-(a.proportionalTarget-a.accepted)||b.pop-a.pop||a.name.localeCompare(b.name));
+ for(const d of ordered){if(left<=0)break;d.accepted++;left--;}
+ if(left>0)for(const d of [...arr].filter(d=>d.pop>0).sort((a,b)=>b.pop-a.pop||a.name.localeCompare(b.name))){while(left>0&&d.accepted<d.noms){d.accepted++;left--;}}
+ for(const d of arr){
+  d.populationSeats=d.accepted-d.minimum;d.redistributed=0;
+  if(d.noms>0)ledger.push(d.name+': population '+(totalPop?100*d.pop/totalPop:0).toFixed(2)+'%; full-capacity share '+(capacity*(totalPop?d.pop/totalPop:0)).toFixed(2)+'; protected minimum '+d.minimum+'; final '+d.accepted);
+ }
+ const remaining=capacity-arr.reduce((a,d)=>a+d.accepted,0);
+ lastResult=arr;dirty=false;render();$('status').textContent='Calculated · minimums protected, population adjusted';$('status').style.color='#087c80';
+ $('ledger').textContent='Protected minimum seats: '+fmt(floor)+' of '+fmt(capacity)+'\\nMinimums count toward the population-based allocation, not on top of it.\\n'+ledger.join('\\n')+'\\n\\nRemaining: '+fmt(remaining);
+ if(!canFill&&wanted>floor)warn('No valid population figures were found. Minimums are protected; other seats cannot be assigned until populations are supplied.',true);
  else if(!teacherEvidence&&mode==='teacher')warn('Manual teacher/nominations edits were made. Minimums use teacher count × minimum (capped by district nominations). Reimport teacher-level DaCapo data for exact per-teacher minimums.');
- else if(available>0)warn(`${fmt(available)} seats remain unfilled because all eligible nominations have been accepted.`);
+ else if(remaining>0&&wanted===capacity)warn(fmt(remaining)+' seats remain unfilled. Check populations for districts requesting more seats.');
+ else if(remaining>0)warn(fmt(remaining)+' seats remain unfilled because all eligible nominations have been accepted.');
 }
 function parseCSV(text){const out=[];let row=[],field='',quoted=false;for(let i=0;i<text.length;i++){const c=text[i];if(quoted){if(c==='"'&&text[i+1]==='"'){field+='"';i++}else if(c==='"'){quoted=false}else field+=c}else if(c==='"'){quoted=true}else if(c===','){row.push(field);field=''}else if(c==='\n'||c==='\r'){if(c==='\r'&&text[i+1]==='\n')i++;row.push(field);if(row.some(x=>x!==''))out.push(row);row=[];field=''}else field+=c}if(field!==''||row.length){row.push(field);out.push(row)}return out}
 function importCsv(text){const rows=parseCSV(text.replace(/^\ufeff/,''));if(!rows.length)throw Error('CSV is empty');const headers=rows.shift().map(x=>x.trim());const idx=h=>headers.indexOf(h);for(const h of ['Teacher','District','Nominated Part 1','Nominated Part 2','Nominated Either'])if(idx(h)<0)throw Error('Missing DaCapo column: '+h);
