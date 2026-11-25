@@ -5,7 +5,8 @@
 :root{--navy:#193047;--blue:#275d79;--pale:#e9f2f6;--teal:#087c80;--ink:#1b2937;--sub:#657588;--line:#d6e0e7;--bg:#f4f7fa;--white:#fff;--amber:#fff3d5}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);font:14px/1.45 system-ui,-apple-system,Segoe UI,sans-serif;color:var(--ink)}header{background:var(--navy);color:white;padding:20px max(20px,calc((100vw - 1450px)/2));display:flex;align-items:center;justify-content:space-between;gap:12px}header h1{margin:0;font-size:22px}header small{color:#c8e1ea}.shell{max-width:1500px;margin:0 auto;padding:22px 22px 45px}.panel{background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 2px 7px #20374708;padding:17px;margin-bottom:16px}h2{font-size:16px;margin:0 0 14px;color:#233d52}.controls{display:grid;grid-template-columns:repeat(5,minmax(155px,1fr));gap:14px}label{font-size:12px;color:var(--sub);font-weight:700;display:block;margin-bottom:5px}select,input[type=number],input[type=text]{font:inherit;min-height:35px;border:1px solid #c9d7e0;border-radius:7px;padding:6px 9px;background:white;color:var(--ink);width:100%}input[type=number]{font-variant-numeric:tabular-nums}button,.filebtn{border:1px solid #b5cad5;border-radius:7px;background:white;color:var(--blue);font:600 13px system-ui;padding:9px 13px;cursor:pointer;white-space:nowrap}button:hover,.filebtn:hover{background:var(--pale)}button.primary{background:var(--teal);color:white;border-color:var(--teal)}button.primary:hover{background:#07676b}button:disabled{opacity:.5;cursor:not-allowed}.actions{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin-top:15px}.filebtn input{display:none}.note{font-size:12px;color:var(--sub);margin-top:10px}.kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:16px}.kpi{padding:15px;background:white;border:1px solid var(--line);border-radius:9px}.kpi span{font-size:12px;color:var(--sub)}.kpi strong{display:block;font-size:25px;color:var(--navy);font-variant-numeric:tabular-nums}.split{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}.alert{padding:11px 12px;border:1px solid #e4c574;background:var(--amber);border-radius:8px;margin-bottom:13px;display:none}.alert.error{border-color:#e5a1a1;background:#fff0f0}.tablewrap{overflow:auto;border:1px solid var(--line);border-radius:8px;max-height:60vh}table{border-collapse:separate;border-spacing:0;width:100%;min-width:900px;text-align:right}th{position:sticky;top:0;background:var(--navy);color:white;padding:8px 6px;font-size:10.5px;letter-spacing:0;text-align:right;white-space:nowrap;z-index:2;border-right:1px solid #527086;border-bottom:1px solid #527086}th:first-child{text-align:left;left:0;z-index:3}td{padding:3px 6px;border-bottom:1px solid #cbd8e2;border-right:1px solid #cbd8e2;font-size:11.5px;font-variant-numeric:tabular-nums;background:white}td:first-child{text-align:left;position:sticky;left:0;z-index:1;font-weight:600;min-width:185px;max-width:235px}tr:nth-child(even) td{background:#f8fafb}td input{width:68px!important;text-align:right;min-height:24px!important;padding:2px 4px!important;border:1px solid #d5dfe6!important;border-radius:4px!important;background:#fff!important;font-size:11.5px!important}td input:focus{background:#fff!important;border-color:var(--teal)!important;outline:none}td.final{font-weight:800;color:#046c71;background:#e1f4f0!important;font-size:14px}td.empty{color:#84909a}tfoot td{position:sticky;bottom:0;background:#dfedf1!important;font-weight:800;border-top:2px solid #a7c6d2;padding:10px 8px}tfoot td:first-child{z-index:2}small.tag{color:#44738a;background:#e9f2f6;border-radius:12px;padding:4px 9px}details{margin-top:10px}summary{cursor:pointer;font-weight:700;color:var(--blue)}.ledger{max-height:230px;overflow:auto;font:12px/1.6 ui-monospace,monospace;white-space:pre-wrap;padding:10px;background:#f6f8fa;border:1px solid var(--line);border-radius:6px}.right{color:var(--sub);font-size:12px}#unmatched{margin:8px 0;color:#a23925}.filebtn{display:inline-block}.help{margin-top:10px;color:var(--sub);font-size:12px}.badge{border-radius:10px;padding:4px 8px;font-size:11px;background:#dbeaf1;color:var(--blue)}@media(max-width:930px){.controls{grid-template-columns:repeat(2,1fr)}.kpis{grid-template-columns:repeat(2,1fr)}header{padding:16px}.shell{padding:12px}.panel{padding:12px}}
 
-/* Dedicated district enrollment editor */
+.import-choice{display:flex;align-items:center;gap:6px}.import-choice label{font-size:10px;margin:0;color:#748795}.import-choice select{min-height:31px;width:auto;max-width:150px;font-size:11px;padding:4px 6px}.actions #fileDetected{font-size:10px}
+ /* Dedicated district enrollment editor */
 .pop-settings{margin:0 0 16px}
 .pop-settings summary{list-style:none;display:flex;align-items:center;justify-content:space-between;gap:10px;cursor:pointer;font-size:15px;color:#233d52}
 .pop-settings summary::-webkit-details-marker{display:none}
@@ -50,7 +51,7 @@ header h1{font-size:20px;letter-spacing:.06em}header .head-actions{display:flex;
 <div class="setting-main"><label for="min">MINIMUM SEATS</label><input id="min" type="number" min="0" value="2"></div>
 <div class="setting-secondary"><label for="minmode">MINIMUM BASIS</label><select id="minmode"><option value="teacher">Per participating teacher</option><option value="district">Per participating district</option></select></div>
 <div class="setting-secondary"><label for="popmode">POPULATION WEIGHTING</label><select id="popmode"><option value="elementary">Elementary</option><option value="junior">Junior High</option><option value="senior">Senior High</option><option value="k12">K–12</option></select></div></div>
-<div class="actions"><label class="filebtn">IMPORT DACAPO CSV<input id="csv" type="file" accept=".csv,text/csv"></label><button id="calculate">RECALCULATE</button><button id="export">EXPORT CSV</button><button id="exportPdf" type="button">EXPORT PDF</button><button id="save">SAVE WORKING FILE</button><label class="filebtn">OPEN SAVED FILE<input type="file" id="open" accept=".json,application/json"></label><button id="reset">RESET EXAMPLE</button></div>
+<div class="actions"><div class="import-choice"><label for="importType">DACAPO ENSEMBLE</label><select id="importType"><option value="auto">AUTO-DETECT</option><option value="elementary">ELEMENTARY</option><option value="junior">JUNIOR HIGH</option><option value="senior">SENIOR HIGH</option></select></div><label class="filebtn">IMPORT DACAPO CSV<input id="csv" type="file" accept=".csv,text/csv"></label><span id="fileDetected" class="right" role="status">NO FILE IMPORTED</span><button id="calculate">RECALCULATE</button><button id="export">EXPORT CSV</button><button id="exportPdf" type="button">EXPORT PDF</button><button id="save">SAVE WORKING FILE</button><label class="filebtn">OPEN SAVED FILE<input type="file" id="open" accept=".json,application/json"></label><button id="reset">RESET EXAMPLE</button></div>
 <div class="note">Changes recalculate automatically after you finish editing a cell. Use RECALCULATE to run the calculation again manually. Data stay in your browser unless exported or saved.</div>
 </section>
 <dialog id="popdialog" class="district-dialog" aria-labelledby="popTitle"><div class="dialog-top"><h2 id="popTitle">DISTRICT POPULATIONS</h2><button type="button" class="icon-button" id="closePop" aria-label="Close district settings">✕</button></div>
@@ -66,7 +67,7 @@ header h1{font-size:20px;letter-spacing:.06em}header .head-actions{display:flex;
 <p class="help">Final accepted totals are highlighted. Editing a number automatically recalculates the results. The calculator blocks allocation if minimums exceed capacity.</p>
 <details><summary>VIEW CALCULATION / REDISTRIBUTION AUDIT</summary><p class="help">Each redistribution pass is documented here.</p><div id="ledger" class="ledger">Calculate to see allocation rounds.</div></details>
 </section>
-<section class="panel"><h2>METHOD & SAFEGUARDS</h2><p style="margin:0">First assign each participating teacher up to the configured minimum (limited by their nominations). Then distribute remaining seats by the selected district population, using largest-remainder rounding. When districts run out of nominations, reweight seats across districts with remaining requests. Never exceed ensemble capacity or a district’s nominations.</p><p class="help">Imported teacher-level nominations support accurate per-teacher minimums. If teacher counts or nomination totals are manually edited, the tool uses a district-level approximation (<i>minimum × teachers</i>, capped by nominations) and flags that distinction. Historical population figures are editable and may need updating before official use.</p></section>
+<section class="panel"><h2>METHOD & SAFEGUARDS</h2><p style="margin:0">Guarantee each participating teacher up to the configured minimum (limited by their nominations). These minimums count toward each district’s population-based share rather than being added to it. Allocate remaining seats proportionally while honoring nominations and protected minimums. Never exceed ensemble capacity or a district’s nominations.</p><p class="help">Imported teacher-level nominations support accurate per-teacher minimums. If teacher counts or nomination totals are manually edited, the tool uses a district-level approximation (<i>minimum × teachers</i>, capped by nominations) and flags that distinction. Historical population figures are editable and may need updating before official use.</p></section>
 </main><script>
 const ORIGINAL=[{"name": "Allendale Columbia Private School", "k12": 297, "elementary": 57, "junior": 41, "senior": 111, "noms": 8, "teachers": 2, "teacherNoms": [4, 4]}, {"name": "Aquinas Institute of Rochester", "k12": 717, "elementary": null, "junior": null, "senior": null, "noms": 0, "teachers": 0, "teacherNoms": []}, {"name": "Brighton CSD", "k12": 3423, "elementary": 705, "junior": 529, "senior": 1236, "noms": 15, "teachers": 2, "teacherNoms": [8, 7]}, {"name": "Brockport CSD", "k12": 3117, "elementary": 675, "junior": 476, "senior": 940, "noms": 10, "teachers": 1, "teacherNoms": [10]}, {"name": "Charles Finney Private School", "k12": 468, "elementary": 113, "junior": 76, "senior": 144, "noms": 0, "teachers": 0, "teacherNoms": []}, {"name": "Churchville Chili CSD", "k12": 3780, "elementary": 849, "junior": 587, "senior": 1182, "noms": 10, "teachers": 1, "teacherNoms": [10]}, {"name": "East Irondequoit CSD", "k12": 2738, "elementary": 593, "junior": 467, "senior": 847, "noms": 8, "teachers": 1, "teacherNoms": [8]}, {"name": "East Rochester CSD", "k12": 973, "elementary": 198, "junior": 158, "senior": 296, "noms": 0, "teachers": 0, "teacherNoms": []}, {"name": "Fairport CSD", "k12": 5374, "elementary": 1213, "junior": 828, "senior": 1731, "noms": 8, "teachers": 1, "teacherNoms": [8]}, {"name": "Gates Chili CSD", "k12": 3613, "elementary": 819, "junior": 569, "senior": 1116, "noms": 40, "teachers": 1, "teacherNoms": [40]}, {"name": "Greece CSD", "k12": 10251, "elementary": 2177, "junior": 1598, "senior": 3219, "noms": 6, "teachers": 1, "teacherNoms": [6]}, {"name": "Harley Private School", "k12": 452, "elementary": 100, "junior": 62, "senior": 144, "noms": 0, "teachers": 0, "teacherNoms": []}, {"name": "Hilton CSD", "k12": 4154, "elementary": 906, "junior": 636, "senior": 1357, "noms": 10, "teachers": 2, "teacherNoms": [4, 6]}, {"name": "Honeoye Falls-Lima CSD", "k12": 2070, "elementary": 462, "junior": 310, "senior": 661, "noms": 8, "teachers": 1, "teacherNoms": [8]}, {"name": "McQuaid Jesuit Private School", "k12": 745, "elementary": 66, "junior": 178, "senior": 501, "noms": 4, "teachers": 1, "teacherNoms": [4]}, {"name": "Our Lady of Mercy Private School", "k12": 656, "elementary": 70, "junior": 159, "senior": 427, "noms": 0, "teachers": 0, "teacherNoms": []}, {"name": "Penfield CSD", "k12": 4733, "elementary": 1056, "junior": 725, "senior": 1412, "noms": 16, "teachers": 1, "teacherNoms": [16]}, {"name": "Pittsford CSD", "k12": 5508, "elementary": 1272, "junior": 879, "senior": 1803, "noms": 28, "teachers": 4, "teacherNoms": [10, 4, 10, 4]}, {"name": "Rochester Academy Charter School", "k12": 823, "elementary": 192, "junior": 122, "senior": 250, "noms": 0, "teachers": 0, "teacherNoms": []}, {"name": "Rochester Christian Private School", "k12": 125, "elementary": 40, "junior": 19, "senior": 0, "noms": 0, "teachers": 0, "teacherNoms": []}, {"name": "Rochester City CSD", "k12": 23545, "elementary": 4699, "junior": 3179, "senior": 6679, "noms": 10, "teachers": 2, "teacherNoms": [5, 5]}, {"name": "Rush Henrietta CSD", "k12": 5663, "elementary": 1233, "junior": 816, "senior": 1659, "noms": 0, "teachers": 0, "teacherNoms": []}, {"name": "Spencerport CSD", "k12": 3574, "elementary": 815, "junior": 540, "senior": 1129, "noms": 12, "teachers": 5, "teacherNoms": [2, 2, 2, 4, 2]}, {"name": "Webster CSD", "k12": 8054, "elementary": 1744, "junior": 1218, "senior": 2537, "noms": 17, "teachers": 2, "teacherNoms": [7, 10]}, {"name": "West Irondequoit CSD", "k12": 3593, "elementary": 856, "junior": 551, "senior": 1153, "noms": 12, "teachers": 1, "teacherNoms": [12]}, {"name": "Wheatland Chili CSD", "k12": 679, "elementary": 167, "junior": 99, "senior": 191, "noms": 0, "teachers": 0, "teacherNoms": []}];
 const fields=['k12','elementary','junior','senior'];
@@ -141,16 +142,57 @@ function calculate(){
  else if(remaining>0)warn(fmt(remaining)+' seats remain unfilled because all eligible nominations have been accepted.');
 }
 function parseCSV(text){const out=[];let row=[],field='',quoted=false;for(let i=0;i<text.length;i++){const c=text[i];if(quoted){if(c==='"'&&text[i+1]==='"'){field+='"';i++}else if(c==='"'){quoted=false}else field+=c}else if(c==='"'){quoted=true}else if(c===','){row.push(field);field=''}else if(c==='\n'||c==='\r'){if(c==='\r'&&text[i+1]==='\n')i++;row.push(field);if(row.some(x=>x!==''))out.push(row);row=[];field=''}else field+=c}if(field!==''||row.length){row.push(field);out.push(row)}return out}
-function importCsv(text){const rows=parseCSV(text.replace(/^\ufeff/,''));if(!rows.length)throw Error('CSV is empty');const headers=rows.shift().map(x=>x.trim());const idx=h=>headers.indexOf(h);for(const h of ['Teacher','District','Nominated Part 1','Nominated Part 2','Nominated Either'])if(idx(h)<0)throw Error('Missing DaCapo column: '+h);
- const map=keyMap(), counts=new Map(districts.map(d=>[d.name,new Map()])),unknown=new Set();let tally=0;
- for(const r of rows){const dn=r[idx('District')]||'', d=map.get(norm(dn));if(!d){unknown.add(dn);continue}const teacher=(r[idx('Teacher')]||'').trim();if(!teacher)continue;const n=['Nominated Part 1','Nominated Part 2','Nominated Either'].reduce((a,h)=>a+Math.max(0,Math.floor(+r[idx(h)]||0)),0);const dm=counts.get(d.name);const t=teacher.toLowerCase();dm.set(t,(dm.get(t)||0)+n);tally+=n}
- for(const d of districts){const t=[...counts.get(d.name).values()].filter(n=>n>0);d.teacherNoms=t;d.teachers=t.length;d.noms=t.reduce((a,b)=>a+b,0)}
- // Retain aggregate voice-part nomination counts for the compact PDF report.
- const partTotals=new Map(districts.map(d=>[d.name,{part1:0,part2:0,either:0}]));
- for(const row of rows){const d=map.get(norm(row[idx('District')]||''));if(!d)continue;
-   const sum=partTotals.get(d.name);for(const [field,h] of [['part1','Nominated Part 1'],['part2','Nominated Part 2'],['either','Nominated Either']])sum[field]+=Math.max(0,Math.floor(+row[idx(h)]||0));
+const CHORAL_FORMATS={
+ elementary:{title:'Elementary Chorus',basis:'elementary',parts:['Part 1','Part 2','Either']},
+ junior:{title:'Junior High Chorus',basis:'junior',parts:['Soprano','Alto','Baritone']},
+ senior:{title:'Senior High Chorus',basis:'senior',parts:['Soprano','Alto','Tenor','Bass']}
+};
+let importedFormat='elementary';
+function identifyFormat(headers){
+ const normalized=new Set(headers.map(x=>x.trim().toLowerCase()));
+ const matches=Object.entries(CHORAL_FORMATS).filter(([type,f])=>f.parts.every(x=>normalized.has(('Nominated '+x).toLowerCase())));
+ if(matches.length!==1)throw Error('Could not identify an ensemble from the nomination headers. Expected Elementary (Part 1 / Part 2 / Either), Junior High (Soprano / Alto / Baritone), or Senior High (Soprano / Alto / Tenor / Bass).');
+ return matches[0][0];
+}
+function importCsv(text,filename=''){
+ const rows=parseCSV(text.replace(/^\ufeff/,''));if(!rows.length)throw Error('CSV is empty');
+ const headers=rows.shift().map(x=>x.trim()),lookup=new Map(headers.map((h,i)=>[h.toLowerCase(),i]));
+ const idx=h=>lookup.get(h.toLowerCase());
+ for(const h of ['Teacher','District'])if(idx(h)===undefined)throw Error('Missing DaCapo column: '+h);
+ const detected=identifyFormat(headers),chosen=$('importType').value;
+ if(chosen!=='auto'&&chosen!==detected)throw Error('This file has '+CHORAL_FORMATS[detected].title+' voice-part columns, but '+CHORAL_FORMATS[chosen].title+' was selected. Change DACAPO ENSEMBLE to '+detected.toUpperCase()+' or AUTO-DETECT.');
+ const columns=CHORAL_FORMATS[detected].parts;
+ const map=keyMap(),counts=new Map(districts.map(d=>[d.name,new Map()])),partTotals=new Map(districts.map(d=>[d.name,Object.fromEntries(columns.map(x=>[x,0]))]));
+ const unknown=new Set();let tally=0;
+ for(const row of rows){
+  const dn=row[idx('District')]||'',d=map.get(norm(dn));
+  if(!d){if(dn.trim())unknown.add(dn);continue;}
+  const teacher=(row[idx('Teacher')]||'').trim();
+  const values=columns.map(x=>Math.max(0,Math.floor(+(row[idx('Nominated '+x)]||0))));
+  if(values.some(x=>!Number.isFinite(x)))throw Error('Invalid nomination count for '+d.name);
+  const n=values.reduce((a,v)=>a+v,0);
+  if(n>0&&!teacher)throw Error('Missing teacher name for a nomination in '+d.name+'.');
+  if(!teacher||n===0)continue;
+  const teachers=counts.get(d.name),key=teacher.toLowerCase().replace(/\s+/g,' ');
+  teachers.set(key,(teachers.get(key)||0)+n);
+  const parts=partTotals.get(d.name);
+  columns.forEach((p,i)=>parts[p]+=values[i]);
+  tally+=n;
  }
- for(const d of districts)d.parts=partTotals.get(d.name);teacherEvidence=true;lastResult=null;dirtyNow();render();renderPopulations();$('unmatched').textContent=unknown.size?`Unmatched districts (not counted): ${[...unknown].join('; ')}`:'';warn(unknown.size?'Review unmatched district names before using these results.':`Imported ${fmt(tally)} nominations across ${fmt(districts.filter(d=>d.noms>0).length)} districts. Press Calculate to allocate.` ,unknown.size)}
+ // Make no changes to existing data until all format checks have passed.
+ for(const d of districts){
+  const t=[...counts.get(d.name).values()].filter(n=>n>0);
+  d.teacherNoms=t;d.teachers=t.length;d.noms=t.reduce((a,b)=>a+b,0);
+  d.parts=partTotals.get(d.name);
+ }
+ importedFormat=detected;
+ $('ensemble').value=CHORAL_FORMATS[detected].title;
+ $('popmode').value=CHORAL_FORMATS[detected].basis;
+ $('fileDetected').textContent='LOADED: '+CHORAL_FORMATS[detected].title.toUpperCase()+(filename?' · '+filename:'');
+ teacherEvidence=true;lastResult=null;dirtyNow();render();renderPopulations();
+ $('unmatched').textContent=unknown.size?'UNMATCHED DISTRICTS (EXCLUDED): '+[...unknown].join('; '):'';
+ warn(unknown.size?'File recognized as '+CHORAL_FORMATS[detected].title+', but unmatched districts must be reviewed before official use.':'Imported '+fmt(tally)+' '+CHORAL_FORMATS[detected].title+' nominations from '+fmt(districts.filter(d=>d.noms>0).length)+' districts. Review maximum seats before finalizing.',unknown.size);
+}
 function download(text,name,type){const a=document.createElement('a'),url=URL.createObjectURL(new Blob([text],{type}));a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
 function csvEscape(v){const s=String(v??'');return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s}
 function exportCSV(){const basis=$('popmode').value,cols=['District','Ensemble','Population basis','Population','Teachers','Nominated','Minimum','Population allocation','Redistributed','Final accepted','Not accepted'];const lines=[cols];for(const d of districts){const r=lastResult?.find(x=>x.name===d.name);lines.push([d.name,$('ensemble').value,basis,d[basis]??'',d.teachers,d.noms,r?.minimum??'',r?.populationSeats??'',r?.redistributed??'',r?.accepted??'',r?r.noms-r.accepted:''])}download(lines.map(r=>r.map(csvEscape).join(',')).join('\r\n'),'MCSMA-'+$('ensemble').value.trim().replace(/[^a-z0-9-]+/gi,'-')+'-Matrix.csv','text/csv;charset=utf-8')}
@@ -158,60 +200,57 @@ function exportCSV(){const basis=$('popmode').value,cols=['District','Ensemble',
 function printableReport(){
  if(!lastResult){alert('Calculate a valid allocation before exporting the PDF.');return;}
  const basis=$('popmode').value;
- const active=districts.filter(d=>d.noms>0);
- const weightedPopulation=active.reduce((a,d)=>a+Math.max(0,+d[basis]||0),0);
+ const active=districts.filter(d=>d.noms>0),weightedPopulation=active.reduce((a,d)=>a+Math.max(0,+d[basis]||0),0);
  const results=new Map(lastResult.map(r=>[r.name,r]));
  const heading=escapeHTML($('ensemble').value.trim()||'Choral Ensemble');
- const hasEither=districts.some(d=>(+d.parts?.either||0)>0);
- const partColumns=hasEither?3:2;
- let body='',teacherTotal=0,totalAccepted=0,totalNominations=0,totalPart1=0,totalPart2=0,totalEither=0,activeDistricts=0;
+ const category=CHORAL_FORMATS[importedFormat]||CHORAL_FORMATS.elementary;
+ const parts=category.parts;
+ let body='',activeDistricts=0,teacherTotal=0,totalAccepted=0,totalNominations=0;
+ const sums=Object.fromEntries(parts.map(k=>[k,0]));
+ const printable=x=>(x===undefined||x===null)?'—':(x||'—');
  for(const d of districts){
-   const n=Math.max(0,+d.noms||0),teachers=Math.max(0,+d.teachers||0);
-   const r=results.get(d.name),accepted=r?.accepted||0,percent=n&&weightedPopulation?100*Math.max(0,+d[basis]||0)/weightedPopulation:0;
-   const p1=d.parts?.part1,p2=d.parts?.part2,pe=d.parts?.either;
-   teacherTotal+=teachers;totalAccepted+=accepted;totalNominations+=n;
-   totalPart1+=p1||0;totalPart2+=p2||0;totalEither+=pe||0;
-   if(n)activeDistricts++;
-   body+='<tr><td class="district">'+escapeHTML(d.name)+'</td>'+
-     '<td class="yn"><span class="pill '+(n?'yes':'no')+'">'+(n?'Yes':'No')+'</span></td>'+
-     '<td class="teachers">'+(teachers||'—')+'</td>'+
-     '<td class="accept">'+(n?accepted:'')+'</td><td class="accept">'+percent.toFixed(2)+'%</td>'+
-     '<td class="nom">'+n+'</td><td class="nom">'+(p1==null?'—':p1||'—')+'</td><td class="nom">'+(p2==null?'—':p2||'—')+'</td>'+
-     (hasEither?'<td class="nom">'+(pe==null?'—':pe||'—')+'</td>':'')+'</tr>';
+  const n=Math.max(0,+d.noms||0),teachers=Math.max(0,+d.teachers||0),r=results.get(d.name);
+  const accepted=r?.accepted||0,percent=n&&weightedPopulation?100*Math.max(0,+d[basis]||0)/weightedPopulation:0;
+  teacherTotal+=teachers;totalAccepted+=accepted;totalNominations+=n;if(n)activeDistricts++;
+  const partCells=parts.map(k=>{const value=d.parts?.[k];if(value!==undefined&&value!==null)sums[k]+=value;return '<td class="nom">'+printable(value)+'</td>';}).join('');
+  body+='<tr><td class="district">'+escapeHTML(d.name)+'</td><td class="yn"><span class="pill '+(n?'yes':'no')+'">'+(n?'Yes':'No')+'</span></td>'+
+   '<td class="teachers">'+printable(teachers)+'</td><td class="accept">'+(n?accepted:'')+'</td><td class="accept">'+percent.toFixed(2)+'%</td>'+
+   '<td class="nom">'+n+'</td>'+partCells+'</tr>';
  }
- const totalPercent=weightedPopulation?'100%':'—';
- const totals='<tr class="totals"><td>TOTALS</td><td>'+activeDistricts+'</td><td>'+teacherTotal+'</td><td>'+totalAccepted+'</td><td>'+totalPercent+'</td><td>'+totalNominations+'</td><td>'+(totalPart1||'—')+'</td><td>'+(totalPart2||'—')+'</td>'+(hasEither?'<td>'+(totalEither||'—')+'</td>':'')+'</tr>';
+ const totals='<tr><td>TOTALS</td><td>'+activeDistricts+'</td><td>'+teacherTotal+'</td><td>'+totalAccepted+'</td><td>'+(weightedPopulation?'100%':'—')+'</td><td>'+totalNominations+'</td>'+
+  parts.map(k=>'<td>'+(sums[k]||'—')+'</td>').join('')+'</tr>';
  const report='<!doctype html><html><head><meta charset="utf-8"><title>'+heading+' — MCSMA Acceptance Matrix</title><style>'+
- '@page{size:letter landscape;margin:0.33in}*{box-sizing:border-box}body{font-family:Arial,Helvetica,sans-serif;margin:0;color:#111}'+
- '.top{display:grid;grid-template-columns:41% 59%;margin-bottom:9px}.heading{background:#70a84f;text-align:center;font-weight:bold;font-size:19px;padding:5px 8px}'+
- 'table{width:100%;border-collapse:collapse;table-layout:fixed;font-size:10.5px}th,td{padding:3px 5px;text-align:center;line-height:1.12}thead th{font-weight:bold}'+
- 'th.district{width:29%;border:0;background:#fff}td.district{text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}'+
- 'th.yn{width:9%;border:0;background:#fff}th.teachers{width:8%;background:#e9edf0;border:1.5px solid #111}'+
+ '@page{size:letter landscape;margin:0.3in}*{box-sizing:border-box}body{font-family:Arial,Helvetica,sans-serif;color:#111;margin:0}'+
+ '.top{display:grid;grid-template-columns:41% 59%;margin-bottom:9px}.heading{background:#70a84f;text-align:center;font-weight:bold;font-size:18px;padding:5px}'+
+ 'table{width:100%;border-collapse:collapse;table-layout:fixed;font-size:10px}th,td{padding:3px 4px;text-align:center;line-height:1.14}thead th{font-weight:bold}'+
+ 'th.district{width:28%;border:0;background:white}td.district{text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}'+
+ 'th.yn{width:8%;border:0;background:white}th.teachers{width:8%;background:#e9edf0;border:1px solid #111}'+
  'th.accept,td.accept{background:#b2c9ef;border-left:1px solid #111;border-right:1px solid #111}th.nom,td.nom{background:#ffe5a0;border-left:1px solid #111;border-right:1px solid #111}'+
  'thead .group{font-size:12px;padding:4px}thead .group.accept{background:#a9c5ef}thead .group.nom{background:#ffe4a1}'+
  'thead tr:last-child th.accept,thead tr:last-child th.nom{border-top:2px solid #111;border-bottom:2px solid #111}'+
  'tbody tr td.accept,tbody tr td.nom{border-bottom:1px solid #111}td.teachers{background:#f1f3f5;border-left:1px solid #aaa;border-right:1px solid #aaa}'+
- '.pill{display:inline-block;color:white;border-radius:12px;width:52px;padding:1px}.yes{background:#087b55}.no{background:#be0010}'+
- 'tfoot td{background:#111!important;color:#fff;font-weight:bold;border:2px solid #111;font-size:11px}tfoot td:first-child{text-align:right}'+
- '.foot{font-size:8.5px;margin-top:6px;color:#555}.printbar{padding:8px;margin-bottom:12px;background:#f0f2f5;font-size:12px}'+
+ '.pill{display:inline-block;color:white;border-radius:12px;width:50px;padding:1px}.yes{background:#087b55}.no{background:#be0010}'+
+ 'tfoot td{background:#111!important;color:white;font-weight:bold;border:2px solid #111;font-size:10px}tfoot td:first-child{text-align:right}'+
+ '.foot{font-size:8px;margin-top:6px;color:#555}.printbar{padding:8px;margin-bottom:12px;background:#f0f2f5;font-size:12px}'+
  '@media print{.printbar{display:none}body{-webkit-print-color-adjust:exact;print-color-adjust:exact}}'+
- '</style></head><body><div class="printbar"><button onclick="window.print()">PRINT / SAVE AS PDF</button> &nbsp; Select <b>Save as PDF</b>, and enable <b>Background graphics</b> to retain the colors.</div>'+
- '<div class="top"><div></div><div class="heading">'+heading+'</div></div><table><thead><tr><th rowspan="2" class="district"></th><th rowspan="2" class="yn">NOMS?</th><th rowspan="2" class="teachers">TEACHERS</th>'+
- '<th colspan="2" class="group accept">ACCEPTANCES</th><th colspan="'+partColumns+'" class="group nom">NOMINATIONS</th></tr>'+
- '<tr><th class="accept">TOTAL</th><th class="accept">% OF CTY</th><th class="nom">TOTAL</th><th class="nom">PART 1</th><th class="nom">PART 2</th>'+
- (hasEither?'<th class="nom">EITHER</th>':'')+'</tr></thead><tbody>'+body+'</tbody><tfoot>'+totals+'</tfoot></table>'+
- '<div class="foot">MCSMA · '+escapeHTML(basis.toUpperCase())+' POPULATION · CAPACITY '+readInput().capacity+' · MINIMUM '+readInput().min+' PER '+escapeHTML(readInput().mode.toUpperCase())+
- '. Blank Part 1 / Part 2 fields indicate that voice-part counts have not been imported from DaCapo.</div></body></html>';
+ '</style></head><body><div class="printbar"><button onclick="window.print()">PRINT / SAVE AS PDF</button> &nbsp; Choose <b>Save as PDF</b> and enable <b>Background graphics</b>.</div>'+
+ '<div class="top"><div></div><div class="heading">'+heading+'</div></div>'+
+ '<table><thead><tr><th rowspan="2" class="district"></th><th rowspan="2" class="yn">NOMS?</th><th rowspan="2" class="teachers">TEACHERS</th>'+
+ '<th colspan="2" class="group accept">ACCEPTANCES</th><th colspan="'+(parts.length+1)+'" class="group nom">NOMINATIONS</th></tr>'+
+ '<tr><th class="accept">TOTAL</th><th class="accept">% OF CTY</th><th class="nom">TOTAL</th>'+
+ parts.map(k=>'<th class="nom">'+escapeHTML(k.toUpperCase())+'</th>').join('')+'</tr></thead><tbody>'+body+'</tbody><tfoot>'+totals+'</tfoot></table>'+
+ '<div class="foot">MCSMA · '+escapeHTML(category.title.toUpperCase())+' · '+escapeHTML(basis.toUpperCase())+' POPULATION · CAPACITY '+readInput().capacity+' · MINIMUM '+readInput().min+' PER '+escapeHTML(readInput().mode.toUpperCase())+
+ '. Voice-part nomination counts are shown when available from DaCapo; acceptances are district totals, not voice-part assignments.</div></body></html>';
  const w=window.open('','_blank');if(!w){alert('Allow pop-ups for this website to export PDF.');return;}
  w.document.open();w.document.write(report);w.document.close();w.focus();
 }
 $('exportPdf').onclick=printableReport;
 
-function saveJSON(){download(JSON.stringify({version:1,ensemble:$('ensemble').value,settings:readInput(),districts},null,2),'MCSMA-Choral-Matrix-Working.json','application/json')}
+function saveJSON(){download(JSON.stringify({version:2,importedFormat,ensemble:$('ensemble').value,settings:readInput(),districts},null,2),'MCSMA-Choral-Matrix-Working.json','application/json')}
 $('calculate').onclick=calculate;$('export').onclick=exportCSV;$('save').onclick=saveJSON;
-$('reset').onclick=()=>{if(!confirm('Reset all edits to the original Elementary sample?'))return;districts=structuredClone(ORIGINAL);teacherEvidence=true;lastResult=null;$('ensemble').value='Elementary Chorus';$('capacity').value=200;$('min').value=2;$('minmode').value='teacher';$('popmode').value='elementary';warn('');$('unmatched').textContent='';render();renderPopulations();calculate()};
-$('csv').onchange=async(e)=>{const f=e.target.files[0];if(!f)return;try{importCsv(await f.text());calculate()}catch(err){warn('CSV import error: '+err.message,true)}e.target.value=''};
-$('open').onchange=async(e)=>{const f=e.target.files[0];if(!f)return;try{const data=JSON.parse(await f.text());if(!Array.isArray(data.districts)||!data.districts.every(x=>typeof x.name==='string'))throw Error('Invalid MCSMA JSON file');districts=data.districts;$('ensemble').value=data.ensemble||'Choral Ensemble';$('capacity').value=data.settings.capacity;$('min').value=data.settings.min;$('minmode').value=data.settings.mode;$('popmode').value=data.settings.basis;teacherEvidence=districts.every(d=>Array.isArray(d.teacherNoms));render();renderPopulations();calculate();}catch(err){warn('Cannot open file: '+err.message,true)}e.target.value=''};
+$('reset').onclick=()=>{if(!confirm('Reset all edits to the original Elementary sample?'))return;districts=structuredClone(ORIGINAL);teacherEvidence=true;lastResult=null;importedFormat='elementary';$('fileDetected').textContent='NO FILE IMPORTED';$('importType').value='auto';$('ensemble').value='Elementary Chorus';$('capacity').value=200;$('min').value=2;$('minmode').value='teacher';$('popmode').value='elementary';warn('');$('unmatched').textContent='';render();renderPopulations();calculate()};
+$('csv').onchange=async(e)=>{const f=e.target.files[0];if(!f)return;try{importCsv(await f.text(),f.name);calculate()}catch(err){warn('CSV import error: '+err.message,true)}e.target.value=''};
+$('open').onchange=async(e)=>{const f=e.target.files[0];if(!f)return;try{const data=JSON.parse(await f.text());if(!Array.isArray(data.districts)||!data.districts.every(x=>typeof x.name==='string'))throw Error('Invalid MCSMA JSON file');districts=data.districts;importedFormat=CHORAL_FORMATS[data.importedFormat]?data.importedFormat:(data.settings?.basis==='junior'?'junior':data.settings?.basis==='senior'?'senior':'elementary');$('fileDetected').textContent='OPENED SAVED WORKING FILE: '+CHORAL_FORMATS[importedFormat].title.toUpperCase();$('ensemble').value=data.ensemble||'Choral Ensemble';$('capacity').value=data.settings.capacity;$('min').value=data.settings.min;$('minmode').value=data.settings.mode;$('popmode').value=data.settings.basis;teacherEvidence=districts.every(d=>Array.isArray(d.teacherNoms));render();renderPopulations();calculate();}catch(err){warn('Cannot open file: '+err.message,true)}e.target.value=''};
 $('popsearch').addEventListener('input',renderPopulations);
 $('gear').addEventListener('click',()=>{$('popdialog').showModal();renderPopulations();});
 $('closePop').addEventListener('click',()=>$('popdialog').close());
