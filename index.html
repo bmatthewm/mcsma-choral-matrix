@@ -240,7 +240,8 @@ function printableReport(){
  '<tr><th class="accept">TOTAL</th><th class="accept">% OF CTY</th><th class="nom">TOTAL</th>'+
  parts.map(k=>'<th class="nom">'+escapeHTML(k.toUpperCase())+'</th>').join('')+'</tr></thead><tbody>'+body+'</tbody><tfoot>'+totals+'</tfoot></table>'+
  '<div class="foot">MCSMA · '+escapeHTML(category.title.toUpperCase())+' · '+escapeHTML(basis.toUpperCase())+' POPULATION · CAPACITY '+readInput().capacity+' · MINIMUM '+readInput().min+' PER '+escapeHTML(readInput().mode.toUpperCase())+
- '. Voice-part nomination counts are shown when available from DaCapo; acceptances are district totals, not voice-part assignments.</div></body></html>';
+ '. Voice-part nomination counts are shown when available from DaCapo; acceptances are district totals, not voice-part assignments.</div></body><!-- GitHub Pages deployment retry after service incident 2026-11-25 -->
+</html>';
  const w=window.open('','_blank');if(!w){alert('Allow pop-ups for this website to export PDF.');return;}
  w.document.open();w.document.write(report);w.document.close();w.focus();
 }
